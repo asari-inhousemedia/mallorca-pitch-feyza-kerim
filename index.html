@@ -1130,7 +1130,7 @@
 </style>
 
 <script>
-  var GEMINI_KEY = 'YOUR_GEMINI_KEY';
+  var GEMINI_KEY = 'AIzaSyA2CAFj_EsnEax-ksw-YMhSonHSw2s12fg';
   var chatHistory = [];
   var chatOpen = false;
 
@@ -1182,7 +1182,11 @@
       contents: chatHistory
     };
 
-    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+    // Auf Vercel: /api/chat Proxy nutzen. Lokal: direkt.
+    var apiUrl = window.location.protocol === 'file:' || !window.location.hostname.includes('vercel')
+      ? 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY
+      : '/api/chat';
+    fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
@@ -1194,9 +1198,9 @@
       addMsg(reply, 'bot');
       chatHistory.push({ role: 'model', parts: [{ text: reply }] });
     })
-    .catch(function(){
+    .catch(function(err){
       typing.remove();
-      addMsg('Verbindungsfehler. Bitte Internet prüfen.', 'bot');
+      addMsg('Fehler: ' + (err && err.message ? err.message : 'Verbindung fehlgeschlagen'), 'bot');
     });
   }
 </script>
