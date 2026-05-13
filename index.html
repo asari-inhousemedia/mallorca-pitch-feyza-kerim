@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Feyza & Kerim — Mallorca Mai 2026</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- AOS -->
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<!-- Lucide -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg:       '#FAF7F2',
+          petrol:   '#2C5F6F',
+          sand:     '#C8956D',
+          ink:      '#1A2B33',
+          muted:    '#6B7B82',
+        },
+        fontFamily: {
+          serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          sans:  ['"Inter"', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #FAF7F2; color: #1A2B33; font-family: 'Inter', sans-serif; margin: 0; }
+
+  /* Ken Burns */
+  @keyframes kenburns {
+    0%   { transform: scale(1)    translate(0,0); }
+    50%  { transform: scale(1.08) translate(-1%,-1%); }
+    100% { transform: scale(1)    translate(0,0); }
+  }
+  .ken-burns { animation: kenburns 22s ease-in-out infinite; }
+
+  /* Scroll indicator */
+  @keyframes bounce-slow {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(8px); }
+  }
+  .scroll-bounce { animation: bounce-slow 2s ease-in-out infinite; }
+
+  /* Nav glass */
+  .nav-glass {
+    background: rgba(250,247,242,0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(44,95,111,0.12);
+  }
+
+  /* Hotel card hover */
+  .hotel-card { transition: transform 0.28s ease, box-shadow 0.28s ease; }
+  .hotel-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(44,95,111,0.18); }
+
+  /* Timeline */
+  .timeline-line {
+    position: absolute;
+    left: 20px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #2C5F6F, #C8956D);
+  }
+  @media (min-width: 768px) {
+    .timeline-line { left: 50%; }
+  }
+
+  /* Accordion */
+  .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .accordion-content.open { max-height: 300px; }
+
+  /* Map */
+  #map { z-index: 1; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FAF7F2; }
+  ::-webkit-scrollbar-thumb { background: #2C5F6F; border-radius: 3px; }
+
+  /* Section label */
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C8956D;
+  }
+
+  /* Star rating */
+  .stars { color: #C8956D; }
+
+  /* Badge */
+  .badge-recommend {
+    background: linear-gradient(135deg, #2C5F6F, #3a7a8e);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .badge-alt {
+    background: linear-gradient(135deg, #C8956D, #d4a882);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* Leaflet legend */
+  .map-legend {
+    background: rgba(250,247,242,0.95);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Restaurant card */
+  .resto-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+  .resto-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(44,95,111,0.14); }
+
+  /* Day card */
+  .day-card { transition: box-shadow 0.25s ease; }
+  .day-card:hover { box-shadow: 0 12px 36px rgba(44,95,111,0.15); }
+
+  /* Button primary */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #2C5F6F; color: #fff;
+    padding: 10px 18px; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: #234e5c; transform: translateY(-1px); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1.5px solid #2C5F6F; color: #2C5F6F;
+    padding: 9px 17px; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: #2C5F6F; color: #fff; transform: translateY(-1px); }
+
+  /* Nav link */
+  .nav-link {
+    font-size: 0.82rem; font-weight: 500; color: #1A2B33;
+    text-decoration: none; padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .nav-link:hover { color: #2C5F6F; border-bottom-color: #2C5F6F; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     STICKY NAV
+============================================================ -->
+<nav class="nav-glass fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-8 h-14 flex items-center justify-between">
+    <span style="font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:600; color:#2C5F6F; letter-spacing:0.02em;">
+      Feyza &amp; Kerim · Mallorca
+    </span>
+    <div class="hidden sm:flex items-center gap-7">
+      <a href="#unterkunft" class="nav-link">Unterkunft</a>
+      <a href="#karte"      class="nav-link">Karte</a>
+      <a href="#plan"       class="nav-link">Reiseplan</a>
+      <a href="#kulinarik"  class="nav-link">Essen</a>
+    </div>
+    <!-- mobile hamburger (visual only, links scroll) -->
+    <div class="sm:hidden flex gap-4 text-xs font-medium text-petrol">
+      <a href="#unterkunft" style="color:#2C5F6F">Hotel</a>
+      <a href="#plan"       style="color:#2C5F6F">Plan</a>
+      <a href="#kulinarik"  style="color:#2C5F6F">Essen</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="relative w-full h-screen min-h-[600px] overflow-hidden flex items-center justify-center">
+  <!-- bg image -->
+  <div class="absolute inset-0">
+    <img
+      class="ken-burns w-full h-full object-cover"
+      src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=85"
+      alt="Caló des Moro, Mallorca"
+    />
+  </div>
+  <!-- overlay -->
+  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(10,28,38,0.5) 0%, rgba(10,28,38,0.25) 60%, rgba(10,28,38,0.6) 100%);"></div>
+
+  <!-- content -->
+  <div class="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
+    <p class="section-label mb-6" style="color:rgba(200,149,109,0.9)">Euer persönlicher Reise-Pitch</p>
+    <h1 style="font-family:'Playfair Display',serif; font-size:clamp(3rem,9vw,6.5rem); font-weight:700; line-height:1.05; letter-spacing:-0.01em; margin-bottom:1.2rem;">
+      Feyza &amp; Kerim
+    </h1>
+    <p style="font-family:'Playfair Display',serif; font-size:clamp(1.1rem,2.8vw,1.75rem); font-style:italic; font-weight:400; opacity:0.93; letter-spacing:0.01em; margin-bottom:1.6rem;">
+      Eure 5 Tage Mallorca — Süden, Stille, Meer.
+    </p>
+    <div style="display:inline-block; background:rgba(200,149,109,0.25); border:1px solid rgba(200,149,109,0.5); border-radius:40px; padding:8px 24px;">
+      <span style="font-size:0.88rem; font-weight:500; letter-spacing:0.08em; color:rgba(255,255,255,0.92);">
+        Freitag — Dienstag &nbsp;·&nbsp; Mai 2026
+      </span>
+    </div>
+  </div>
+
+  <!-- scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-bounce z-10 flex flex-col items-center gap-2">
+    <span style="font-size:0.7rem; letter-spacing:0.12em; color:rgba(255,255,255,0.7);">SCROLL</span>
+    <div style="width:1.5px; height:36px; background:linear-gradient(to bottom, rgba(255,255,255,0.7), transparent);"></div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     INTRO
+============================================================ -->
+<section class="py-20 px-4 max-w-5xl mx-auto">
+  <div data-aos="fade-up">
+    <p class="section-label text-center mb-3">Warum dieser Plan für Euch</p>
+    <h2 style="font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); text-align:center; margin-bottom:1rem;">
+      Der Süden ist Mallorcas best gehütetes Geheimnis
+    </h2>
+    <p style="text-align:center; max-width:600px; margin:0 auto 3.5rem; color:#6B7B82; line-height:1.8; font-size:0.97rem;">
+      Keine Hotelburgen, keine Partymeilen — der Südosten schenkt Euch kristallklares Wasser, Pinienwälder, echte mallorquinische Dörfer und Buchten, die man immer noch zu Fuß erkundet. Im Mai blüht alles, das Meer wärmt sich auf, und die Touristenströme sind noch moderat. Perfekt für Euren ersten Besuch.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
+    <!-- Kachel 1 -->
+    <div data-aos="fade-up" data-aos-delay="0"
+         style="background:#fff; border-radius:16px; padding:2rem 1.5rem; text-align:center; box-shadow:0 2px 20px rgba(44,95,111,0.07);">
+      <div style="width:52px;height:52px;background:rgba(44,95,111,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C5F6F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l2-6 4 3 3-8 3 5 2-2 4 8H3z"/><circle cx="12" cy="4" r="1"/></svg>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:0.5rem;">Ruhige Buchten</h3>
+      <p style="color:#6B7B82; font-size:0.88rem; line-height:1.7;">Caló des Moro, Cala Mondragó, Es Trenc — versteckte Paradiese, die zu Fuß oder per Mietwagen erreichbar sind.</p>
+    </div>
+
+    <!-- Kachel 2 -->
+    <div data-aos="fade-up" data-aos-delay="100"
+         style="background:#fff; border-radius:16px; padding:2rem 1.5rem; text-align:center; box-shadow:0 2px 20px rgba(44,95,111,0.07);">
+      <div style="width:52px;height:52px;background:rgba(200,149,109,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8956D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:0.5rem;">Echte mallorquinische Küche</h3>
+      <p style="color:#6B7B82; font-size:0.88rem; line-height:1.7;">Frischer Fisch direkt am Hafen, tumbet, ensaïmades — fern von Touristenrestaurants, nah an der Insel.</p>
+    </div>
+
+    <!-- Kachel 3 -->
+    <div data-aos="fade-up" data-aos-delay="200"
+         style="background:#fff; border-radius:16px; padding:2rem 1.5rem; text-align:center; box-shadow:0 2px 20px rgba(44,95,111,0.07);">
+      <div style="width:52px;height:52px;background:rgba(44,95,111,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C5F6F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif; font-size:1.15rem; margin-bottom:0.5rem;">Natur in voller Blüte</h3>
+      <p style="color:#6B7B82; font-size:0.88rem; line-height:1.7;">Mai ist Mallorcas schönster Monat — Wildblumen, azurblaues Meer, 24°C tagsüber. Noch keine Hochsaison-Massen.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     UNTERKUNFT
+============================================================ -->
+<section id="unterkunft" class="py-20 px-4" style="background:linear-gradient(to bottom, #FAF7F2, #f0ede7);">
+  <div class="max-w-5xl mx-auto">
+    <div data-aos="fade-up" style="text-align:center; margin-bottom:3.5rem;">
+      <p class="section-label mb-3">Eure Basis</p>
+      <h2 style="font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.6rem);">
+        Zwei Empfehlungen, die zu Euch passen
+      </h2>
+      <p style="color:#6B7B82; margin-top:0.8rem; font-size:0.95rem;">Beide unter 130€/Nacht, beide im Herzen des Südostens.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+
+      <!-- Hotel 1 -->
+      <div class="hotel-card" data-aos="fade-up" data-aos-delay="0"
+           style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 4px 28px rgba(44,95,111,0.1);">
+        <div style="position:relative; height:220px; overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80"
+               alt="Hotel Cala d'Or Pool"
+               style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;"
+               onmouseover="this.style.transform='scale(1.05)'"
+               onmouseout="this.style.transform='scale(1)'" />
+          <div style="position:absolute;top:14px;left:14px;">
+            <span class="badge-recommend">Unsere Empfehlung</span>
+          </div>
+        </div>
+        <div style="padding:1.6rem;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.4rem;">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;line-height:1.2;">Hotel Cala d'Or</h3>
+            <span style="font-size:1.05rem;font-weight:700;color:#2C5F6F;white-space:nowrap;margin-left:1rem;">ca. 90–130€</span>
+          </div>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Av. de Bèlgica, 49 · 07660 Cala d'Or</p>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:1rem;">
+            <span class="stars">★★★★½</span>
+            <span style="font-size:0.78rem;color:#6B7B82;margin-left:4px;">4,5 · 823 Bewertungen</span>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0 0 1.4rem;display:flex;flex-direction:column;gap:6px;">
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Direkt an der Cala Petita
+            </li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Eigener Strandzugang
+            </li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Pool &amp; Frühstück inklusive
+            </li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Ruhig, 5 Min zum Hafen Portopetro
+            </li>
+          </ul>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <a href="https://www.google.com/maps/place/?q=place_id:ChIJyd5UPcVQlhIRFeX8ziQndL8" target="_blank" class="btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Google Maps
+            </a>
+            <a href="https://www.booking.com/searchresults.html?ss=Hotel+Cala+d%27Or+Mallorca" target="_blank" class="btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              Auf Booking suchen
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel 2 -->
+      <div class="hotel-card" data-aos="fade-up" data-aos-delay="120"
+           style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 4px 28px rgba(44,95,111,0.1);">
+        <div style="position:relative; height:220px; overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1505873242700-f289a29e1e0f?w=800&q=80"
+               alt="Finca Es Turó"
+               style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;"
+               onmouseover="this.style.transform='scale(1.05)'"
+               onmouseout="this.style.transform='scale(1)'" />
+          <div style="position:absolute;top:14px;left:14px;">
+            <span class="badge-alt">Alternative · Finca-Stil</span>
+          </div>
+        </div>
+        <div style="padding:1.6rem;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.4rem;">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;line-height:1.2;">Finca Hotel Rural Es Turó</h3>
+            <span style="font-size:1.05rem;font-weight:700;color:#2C5F6F;white-space:nowrap;margin-left:1rem;">ca. 100–120€</span>
+          </div>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Carrer Cas Perets · 07640 Ses Salines</p>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:1rem;">
+            <span class="stars">★★★★½</span>
+            <span style="font-size:0.78rem;color:#6B7B82;margin-left:4px;">4,4 · 619 Bewertungen</span>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0 0 1.4rem;display:flex;flex-direction:column;gap:6px;">
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#C8956D;font-size:1rem;">✦</span> Authentische Finca, kein Hotelkomplex
+            </li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#C8956D;font-size:1rem;">✦</span> Riesige Zimmer, ruhiger Innenhof
+            </li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#C8956D;font-size:1rem;">✦</span> Olivenhain-Atmosphäre, Pool
+            </li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
+              <span style="color:#C8956D;font-size:1rem;">✦</span> 20 Min zu allen Buchten
+            </li>
+          </ul>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <a href="https://www.google.com/maps/place/?q=place_id:ChIJd-ktlQqrlxIRnk2RqAKHTEI" target="_blank" class="btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Google Maps
+            </a>
+            <a href="https://www.booking.com/searchresults.html?ss=Finca+Hotel+Rural+Es+Turo+Ses+Salines+Mallorca" target="_blank" class="btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              Auf Booking suchen
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     INTERAKTIVE KARTE
+============================================================ -->
+<section id="karte" class="py-20 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div data-aos="fade-up" style="text-align:center;margin-bottom:2.5rem;">
+      <p class="section-label mb-3">Eure Spielwiese</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);">
+        Südost-Mallorca auf einen Blick
+      </h2>
+      <p style="color:#6B7B82;margin-top:0.8rem;font-size:0.95rem;">Klickt auf die Marker für Details zu jedem Ort.</p>
+    </div>
+    <div data-aos="fade-up" data-aos-delay="80"
+         style="border-radius:18px;overflow:hidden;box-shadow:0 6px 36px rgba(44,95,111,0.14);">
+      <div id="map" style="height:520px;width:100%;"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     ITINERARY TIMELINE
+============================================================ -->
+<section id="plan" class="py-20 px-4" style="background:linear-gradient(to bottom,#f0ede7,#FAF7F2);">
+  <div class="max-w-4xl mx-auto">
+    <div data-aos="fade-up" style="text-align:center;margin-bottom:4rem;">
+      <p class="section-label mb-3">Tag für Tag</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);">
+        Euer 5-Tage-Plan, Feyza &amp; Kerim
+      </h2>
+    </div>
+
+    <!-- Timeline wrapper -->
+    <div style="position:relative;padding-left:52px;" class="md:px-0">
+      <div class="timeline-line hidden md:block"></div>
+
+      <!-- Day cards data array rendered below -->
+
+      <!-- TAG 1 -->
+      <div data-aos="fade-up" style="margin-bottom:3rem;display:flex;flex-direction:column;align-items:flex-start;" class="md:flex-row md:items-start md:gap-6">
+        <!-- left: day number -->
+        <div style="position:absolute;left:0;width:40px;height:40px;background:#2C5F6F;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;z-index:2;margin-top:1.5rem;" class="md:static md:flex-shrink-0">1</div>
+        <!-- card -->
+        <div class="day-card" style="flex:1;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 3px 20px rgba(44,95,111,0.09);margin-left:0;" class="md:ml-6">
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1502780402662-acc01917738e?w=700&q=80"
+                 alt="Mallorca Hafen Abend" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="padding:1.4rem;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
+              <span style="font-size:1rem;">☀️</span>
+              <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#C8956D;">Freitag</span>
+            </div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.6rem;">Ankommen &amp; Einleben</h3>
+            <p style="color:#6B7B82;font-size:0.88rem;line-height:1.75;">
+              Flug, Mietwagen, Check-in im Hotel. Nachmittags kurzer Spaziergang zur <strong style="color:#1A2B33;">Cala Petita</strong> — Euer erster Blick auf das türkisblaue Wasser. Abends zum Fischerhafen <strong style="color:#1A2B33;">Portopetro</strong>: Aperitivo mit Blick aufs Wasser, Abendessen in einer der kleinen Terrassen-Restaurants.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAG 2 -->
+      <div data-aos="fade-up" style="margin-bottom:3rem;display:flex;flex-direction:column;align-items:flex-start;" class="md:flex-row md:items-start md:gap-6">
+        <div style="position:absolute;left:0;width:40px;height:40px;background:#2C5F6F;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;z-index:2;margin-top:1.5rem;" class="md:static md:flex-shrink-0">2</div>
+        <div class="day-card" style="flex:1;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 3px 20px rgba(44,95,111,0.09);">
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=700&q=80"
+                 alt="Caló des Moro türkisblaue Bucht" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="padding:1.4rem;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
+              <span style="font-size:1rem;">☀️</span>
+              <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#C8956D;">Samstag</span>
+            </div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.6rem;">Die berühmten Mini-Buchten</h3>
+            <p style="color:#6B7B82;font-size:0.88rem;line-height:1.75;">
+              Früh aufbrechen (vor 9:30 Uhr!) zu <strong style="color:#1A2B33;">Caló des Moro</strong> — Mallorcas schönste Bucht, Platz für ~50 Personen. Nebenan: <strong style="color:#1A2B33;">Cala s'Almunia</strong>. Mittagessen in Santanyí, Wochenmarkt schlendern. Nachmittags <strong style="color:#1A2B33;">Cala Llombards</strong> — ruhiger, weniger bekannt, traumhafter Sonnenuntergangsblick.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAG 3 -->
+      <div data-aos="fade-up" style="margin-bottom:3rem;display:flex;flex-direction:column;align-items:flex-start;" class="md:flex-row md:items-start md:gap-6">
+        <div style="position:absolute;left:0;width:40px;height:40px;background:#2C5F6F;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;z-index:2;margin-top:1.5rem;" class="md:static md:flex-shrink-0">3</div>
+        <div class="day-card" style="flex:1;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 3px 20px rgba(44,95,111,0.09);">
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=700&q=80"
+                 alt="Mondragó Naturpark Pinienstrand" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="padding:1.4rem;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
+              <span style="font-size:1rem;">🌿</span>
+              <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#C8956D;">Sonntag</span>
+            </div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.6rem;">Naturpark Mondragó</h3>
+            <p style="color:#6B7B82;font-size:0.88rem;line-height:1.75;">
+              Ganzer Tag im <strong style="color:#1A2B33;">Naturpark Mondragó</strong>: leichte Wanderwege durch Pinien, Badestopps an <strong style="color:#1A2B33;">Cala Mondragó</strong> und dem weniger bekannten <strong style="color:#1A2B33;">S'Amarador</strong>. Abends nach <strong style="color:#1A2B33;">Ses Salines</strong> — das weiße Dorf mit Salzseen und dem besten Sonnenuntergang der Region.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAG 4 -->
+      <div data-aos="fade-up" style="margin-bottom:3rem;display:flex;flex-direction:column;align-items:flex-start;" class="md:flex-row md:items-start md:gap-6">
+        <div style="position:absolute;left:0;width:40px;height:40px;background:#C8956D;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;z-index:2;margin-top:1.5rem;" class="md:static md:flex-shrink-0">4</div>
+        <div class="day-card" style="flex:1;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 3px 20px rgba(44,95,111,0.09);">
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1548668453-a41c4c4d0b63?w=700&q=80"
+                 alt="Tramuntana Bergküste Mallorca" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="padding:1.4rem;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
+              <span style="font-size:1rem;">🏔️</span>
+              <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#C8956D;">Montag</span>
+            </div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.6rem;">Tramuntana Bergtag</h3>
+            <p style="color:#6B7B82;font-size:0.88rem;line-height:1.75;">
+              Großer Ausflug in den Norden: <strong style="color:#1A2B33;">Valldemossa</strong> (UNESCO-Welterbe-Dorf, Chopin-Kloster), dann die spektakuläre <strong style="color:#1A2B33;">Ma-10 Küstenstraße</strong> nach <strong style="color:#1A2B33;">Deià</strong>. Mittagessen bei <strong style="color:#1A2B33;">Ca's Patró March</strong> direkt am Wasser — unbedingt reservieren! Danach kurzes Bad in der <strong style="color:#1A2B33;">Cala Deià</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAG 5 -->
+      <div data-aos="fade-up" style="margin-bottom:0;display:flex;flex-direction:column;align-items:flex-start;" class="md:flex-row md:items-start md:gap-6">
+        <div style="position:absolute;left:0;width:40px;height:40px;background:#C8956D;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;z-index:2;margin-top:1.5rem;" class="md:static md:flex-shrink-0">5</div>
+        <div class="day-card" style="flex:1;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 3px 20px rgba(44,95,111,0.09);">
+          <div style="height:180px;overflow:hidden;">
+            <img src="https://images.unsplash.com/photo-1559494007-9f5847c49d94?w=700&q=80"
+                 alt="Es Trenc weißer Strand" style="width:100%;height:100%;object-fit:cover;" />
+          </div>
+          <div style="padding:1.4rem;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;">
+              <span style="font-size:1rem;">🌅</span>
+              <span style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#C8956D;">Dienstag</span>
+            </div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:0.6rem;">Es Trenc &amp; Abschied</h3>
+            <p style="color:#6B7B82;font-size:0.88rem;line-height:1.75;">
+              Der letzte Morgen gehört <strong style="color:#1A2B33;">Es Trenc</strong> — der karibischste Strand der Insel, 3 km weißer Sand, türkis wie die Malediven. Mittagessen in <strong style="color:#1A2B33;">Colonia de Sant Jordi</strong>. Dann Mietwagen zurück, Check-out und Abflug. Mit dem besten Urlaubsgefühl, das Mallorca geben kann.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     KULINARIK
+============================================================ -->
+<section id="kulinarik" class="py-20 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div data-aos="fade-up" style="text-align:center;margin-bottom:3rem;">
+      <p class="section-label mb-3">Genuss auf höchstem Niveau</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);">
+        Wo Ihr essen solltet
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+      <!-- R1 -->
+      <div class="resto-card" data-aos="fade-up" data-aos-delay="0"
+           style="background:#fff;border-radius:16px;padding:1.6rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);display:flex;gap:1rem;">
+        <div style="width:48px;height:48px;background:rgba(44,95,111,0.1);border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🐟</div>
+        <div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.25rem;">Sa Llotja des Cap</h4>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Cala Figuera · Fischerhafen</p>
+          <p style="font-size:0.85rem;line-height:1.65;color:#1A2B33;">Frischer Fisch direkt vom Boot, Tische auf dem Steg über dem Wasser. Das beste Meeresfrüchte-Erlebnis der Region.</p>
+          <span style="display:inline-block;margin-top:0.6rem;font-size:0.75rem;color:#C8956D;font-weight:500;">⚑ Reservierung empfohlen</span>
+        </div>
+      </div>
+
+      <!-- R2 -->
+      <div class="resto-card" data-aos="fade-up" data-aos-delay="80"
+           style="background:#fff;border-radius:16px;padding:1.6rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);display:flex;gap:1rem;">
+        <div style="width:48px;height:48px;background:rgba(200,149,109,0.12);border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🍽️</div>
+        <div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.25rem;">HM Restaurant</h4>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Santanyí · Modern mallorquinisch</p>
+          <p style="font-size:0.85rem;line-height:1.65;color:#1A2B33;">Zeitgemäße mallorquinische Küche, lokale Zutaten, charmanter Innenhof. Ideal nach dem Wochenmarkt samstags.</p>
+          <span style="display:inline-block;margin-top:0.6rem;font-size:0.75rem;color:#2C5F6F;font-weight:500;">✓ Walk-ins möglich</span>
+        </div>
+      </div>
+
+      <!-- R3 -->
+      <div class="resto-card" data-aos="fade-up" data-aos-delay="160"
+           style="background:#fff;border-radius:16px;padding:1.6rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);display:flex;gap:1rem;">
+        <div style="width:48px;height:48px;background:rgba(44,95,111,0.1);border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🌿</div>
+        <div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.25rem;">Es Mirador</h4>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Mondragó · Naturblick</p>
+          <p style="font-size:0.85rem;line-height:1.65;color:#1A2B33;">Einfache lokale Küche mit atemberaubendem Blick über den Naturpark. Pa amb oli und gegrillter Fisch.</p>
+          <span style="display:inline-block;margin-top:0.6rem;font-size:0.75rem;color:#2C5F6F;font-weight:500;">✓ Perfekt zum Mittagessen</span>
+        </div>
+      </div>
+
+      <!-- R4 -->
+      <div class="resto-card" data-aos="fade-up" data-aos-delay="240"
+           style="background:#fff;border-radius:16px;padding:1.6rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);display:flex;gap:1rem;">
+        <div style="width:48px;height:48px;background:rgba(200,149,109,0.12);border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">⚓</div>
+        <div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.25rem;">Ca's Patró March</h4>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Deià · Direkt am Meer</p>
+          <p style="font-size:0.85rem;line-height:1.65;color:#1A2B33;">Legendäres Bootshaus-Restaurant, Tische über dem Wasser. Einer der schönsten Mittagsplätze Europas.</p>
+          <span style="display:inline-block;margin-top:0.6rem;font-size:0.75rem;color:#C8956D;font-weight:500;">⚑ Unbedingt vorab reservieren!</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     PRAKTISCHE TIPPS
+============================================================ -->
+<section class="py-20 px-4" style="background:linear-gradient(to bottom,#FAF7F2,#f0ede7);">
+  <div class="max-w-3xl mx-auto">
+    <div data-aos="fade-up" style="text-align:center;margin-bottom:2.5rem;">
+      <p class="section-label mb-3">Alles Wichtige</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);">
+        Praktische Tipps für Euch
+      </h2>
+    </div>
+
+    <div data-aos="fade-up" data-aos-delay="60" style="display:flex;flex-direction:column;gap:0;">
+
+      <!-- Akkordeon 1 -->
+      <div style="border-top:1px solid rgba(44,95,111,0.12);overflow:hidden;">
+        <button onclick="toggleAcc(this)" style="width:100%;text-align:left;padding:1.2rem 0;display:flex;align-items:center;justify-content:space-between;background:transparent;border:none;cursor:pointer;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:#1A2B33;">Wann zu welcher Bucht?</span>
+          <svg class="acc-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C5F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-content" style="padding-bottom:0;">
+          <p style="color:#6B7B82;font-size:0.9rem;line-height:1.75;padding-bottom:1.2rem;">
+            <strong style="color:#1A2B33;">Caló des Moro:</strong> Vor 10 Uhr — danach ist der Parkplatz voll und der Weg gesperrt. Frühaufsteher werden belohnt.<br>
+            <strong style="color:#1A2B33;">Cala Mondragó:</strong> Entspannt, auch nachmittags gut besuchbar, Naturpark-Parkplätze vorhanden.<br>
+            <strong style="color:#1A2B33;">Es Trenc:</strong> Riesig (3 km), zu jeder Tageszeit schön — aber früh am schönsten für das türkise Licht.
+          </p>
+        </div>
+      </div>
+
+      <!-- Akkordeon 2 -->
+      <div style="border-top:1px solid rgba(44,95,111,0.12);overflow:hidden;">
+        <button onclick="toggleAcc(this)" style="width:100%;text-align:left;padding:1.2rem 0;display:flex;align-items:center;justify-content:space-between;background:transparent;border:none;cursor:pointer;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:#1A2B33;">Was packen? (Mai)</span>
+          <svg class="acc-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C5F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-content">
+          <p style="color:#6B7B82;font-size:0.9rem;line-height:1.75;padding-bottom:1.2rem;">
+            Tagsüber 22–26°C, abends 12–15°C → Lagen-Prinzip. Leichte Jacke oder Strickjacke für Abende im Freien. Wanderschuhe für Mondragó und Tramuntana. Sonnencreme SPF 50+. Wasserflaschen (Leitungswasser ist trinkbar). Kleine Unterwasserkamera für die Buchten.
+          </p>
+        </div>
+      </div>
+
+      <!-- Akkordeon 3 -->
+      <div style="border-top:1px solid rgba(44,95,111,0.12);overflow:hidden;">
+        <button onclick="toggleAcc(this)" style="width:100%;text-align:left;padding:1.2rem 0;display:flex;align-items:center;justify-content:space-between;background:transparent;border:none;cursor:pointer;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:#1A2B33;">Was kostet es grob?</span>
+          <svg class="acc-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C5F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-content">
+          <p style="color:#6B7B82;font-size:0.9rem;line-height:1.75;padding-bottom:1.2rem;">
+            <strong style="color:#1A2B33;">Hotel:</strong> 90–130€ pro Nacht (4 Nächte = 360–520€)<br>
+            <strong style="color:#1A2B33;">Essen:</strong> 30–50€ pro Person/Tag (Mittag einfach, Abend schöner)<br>
+            <strong style="color:#1A2B33;">Aktivitäten:</strong> Buchten sind kostenlos; Mondragó 6€ Parkgebühr<br>
+            <strong style="color:#1A2B33;">Gesamt (grob):</strong> ca. 800–1.000€ für Euch beide vor Ort (ohne Flüge)
+          </p>
+        </div>
+      </div>
+
+      <!-- Akkordeon 4 -->
+      <div style="border-top:1px solid rgba(44,95,111,0.12);border-bottom:1px solid rgba(44,95,111,0.12);overflow:hidden;">
+        <button onclick="toggleAcc(this)" style="width:100%;text-align:left;padding:1.2rem 0;display:flex;align-items:center;justify-content:space-between;background:transparent;border:none;cursor:pointer;">
+          <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:#1A2B33;">Wasser im Mai — schwimmen?</span>
+          <svg class="acc-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C5F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-content">
+          <p style="color:#6B7B82;font-size:0.9rem;line-height:1.75;padding-bottom:1.2rem;">
+            Meerestemperatur im Mai: 17–20°C — kühl, aber absolut schwimmbar für die meisten. Die kleinen geschützten Buchten (Caló des Moro, Cala Mondragó) erwärmen sich durch die Felswände etwas stärker. Wer empfindlich ist: kurzes Bad mit Nasskompetenz. Neopren nicht nötig.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer style="background:#1A2B33;color:#fff;padding:4rem 1.5rem 3rem;text-align:center;">
+  <div style="max-width:500px;margin:0 auto;">
+    <p style="font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.6rem);font-weight:400;font-style:italic;margin-bottom:0.5rem;opacity:0.95;">
+      Mit Liebe geplant für Feyza &amp; Kerim
+    </p>
+    <p style="color:rgba(255,255,255,0.45);font-size:0.8rem;margin-bottom:2.5rem;">Mai 2026 · Mallorca Südosten</p>
+
+    <div style="width:40px;height:1px;background:rgba(200,149,109,0.5);margin:0 auto 2rem;"></div>
+
+    <p style="font-size:0.75rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.4);">
+      Inhouse Media
+    </p>
+    <p style="font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:0.3rem;">KI-Agentur · Tübingen</p>
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script>
+  // AOS Init
+  AOS.init({ duration: 700, easing: 'ease-out-quad', once: true, offset: 60 });
+
+  // Leaflet Map
+  (function() {
+    var map = L.map('map', { zoomControl: true, scrollWheelZoom: false })
+      .setView([39.38, 3.10], 10);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap contributors © CARTO',
+      subdomains: 'abcd', maxZoom: 19
+    }).addTo(map);
+
+    function makeIcon(color, emoji) {
+      return L.divIcon({
+        html: '<div style="background:' + color + ';width:32px;height:32px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.22);display:flex;align-items:center;justify-content:center;font-size:14px;">' + emoji + '</div>',
+        className: '',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -18]
+      });
+    }
+
+    var hotelIcon = makeIcon('#2C5F6F', '🏨');
+    var beachIcon = makeIcon('#4CA8BE', '🏖');
+    var foodIcon  = makeIcon('#C8956D', '🍴');
+    var townIcon  = makeIcon('#8E9EA5', '🏘');
+
+    var popupOpts = { maxWidth: 220, className: '' };
+
+    // Hotels
+    L.marker([39.3714, 3.2293], {icon: hotelIcon}).addTo(map)
+      .bindPopup('<strong>Hotel Cala d\'Or</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Eure empfohlene Basis</span>', popupOpts);
+    L.marker([39.3537, 3.0780], {icon: hotelIcon}).addTo(map)
+      .bindPopup('<strong>Finca Es Turó</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Alternative, Ses Salines</span>', popupOpts);
+
+    // Buchten
+    L.marker([39.3247, 3.1395], {icon: beachIcon}).addTo(map)
+      .bindPopup('<strong>Caló des Moro</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Schönste Minibucht — vor 9:30 Uhr!</span>', popupOpts);
+    L.marker([39.3478, 3.1840], {icon: beachIcon}).addTo(map)
+      .bindPopup('<strong>Cala Mondragó</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Naturpark, Pinienwälder</span>', popupOpts);
+    L.marker([39.3211, 3.1281], {icon: beachIcon}).addTo(map)
+      .bindPopup('<strong>Cala Llombards</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Ruhig, wenig bekannt</span>', popupOpts);
+    L.marker([39.3478, 2.9978], {icon: beachIcon}).addTo(map)
+      .bindPopup('<strong>Es Trenc</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Karibischer 3-km-Strand</span>', popupOpts);
+    L.marker([39.7494, 2.6420], {icon: beachIcon}).addTo(map)
+      .bindPopup('<strong>Cala Deià</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Tramuntana-Küste, Tramuntana</span>', popupOpts);
+
+    // Restaurants
+    L.marker([39.7456, 2.6356], {icon: foodIcon}).addTo(map)
+      .bindPopup('<strong>Ca\'s Patró March</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Legendäres Bootshaus-Restaurant Deià</span>', popupOpts);
+    L.marker([39.3275, 3.1664], {icon: foodIcon}).addTo(map)
+      .bindPopup('<strong>Sa Llotja des Cap</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Fisch am Steg, Cala Figuera</span>', popupOpts);
+
+    // Orte
+    L.marker([39.3551, 3.1287], {icon: townIcon}).addTo(map)
+      .bindPopup('<strong>Santanyí</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Wochenmarkt samstags</span>', popupOpts);
+    L.marker([39.7106, 2.6225], {icon: townIcon}).addTo(map)
+      .bindPopup('<strong>Valldemossa</strong><br><span style="color:#6B7B82;font-size:0.8rem;">UNESCO-Welterbe-Dorf</span>', popupOpts);
+
+    // Legende
+    var legend = L.control({ position: 'topright' });
+    legend.onAdd = function() {
+      var div = L.DomUtil.create('div', 'map-legend');
+      div.innerHTML =
+        '<strong style="font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:#1A2B33;">Legende</strong><br>' +
+        '<span style="color:#2C5F6F">🏨</span> Hotel<br>' +
+        '<span style="color:#4CA8BE">🏖</span> Bucht<br>' +
+        '<span style="color:#C8956D">🍴</span> Restaurant<br>' +
+        '<span style="color:#8E9EA5">🏘</span> Ort';
+      return div;
+    };
+    legend.addTo(map);
+  })();
+
+  // Accordion
+  function toggleAcc(btn) {
+    var content = btn.nextElementSibling;
+    var icon = btn.querySelector('.acc-icon');
+    var isOpen = content.classList.contains('open');
+    // close all
+    document.querySelectorAll('.accordion-content.open').forEach(function(el) {
+      el.classList.remove('open');
+    });
+    document.querySelectorAll('.acc-icon').forEach(function(ic) {
+      ic.style.transform = 'rotate(0deg)';
+    });
+    if (!isOpen) {
+      content.classList.add('open');
+      icon.style.transform = 'rotate(180deg)';
+    }
+  }
+</script>
+
+<!-- ============================================================
+     FLOATING MUSIC PLAYER
+============================================================ -->
+<div id="music-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+  <!-- Toggle Button -->
+  <button onclick="toggleMusic()" id="music-btn"
+    style="width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
+           background:linear-gradient(135deg,#2C5F6F,#3a8fa3);
+           box-shadow:0 4px 18px rgba(44,95,111,0.45);
+           display:flex;align-items:center;justify-content:center;
+           transition:transform 0.2s,box-shadow 0.2s;"
+    onmouseover="this.style.transform='scale(1.08)'"
+    onmouseout="this.style.transform='scale(1)'">
+    <!-- Music note icon -->
+    <svg id="music-icon-on" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    <svg id="music-icon-off" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v9"/><path d="M15 9.34V5l-6 1v5.34"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  </button>
+  <!-- Tooltip -->
+  <div id="music-label" style="background:rgba(26,43,51,0.88);color:#fff;font-size:0.7rem;
+       font-family:'Inter',sans-serif;padding:5px 10px;border-radius:20px;
+       white-space:nowrap;pointer-events:none;letter-spacing:0.04em;
+       animation:fadeLabel 3s ease forwards;">
+    Spanische Gitarrenmusik
+  </div>
+  <!-- Hidden YouTube iframe -->
+  <div id="yt-container" style="display:none;border-radius:12px;overflow:hidden;
+       box-shadow:0 8px 30px rgba(0,0,0,0.25);width:260px;">
+    <iframe id="yt-frame"
+      src=""
+      allow="autoplay; encrypted-media"
+      frameborder="0" allowfullscreen
+      style="width:100%;height:150px;display:block;"></iframe>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeLabel {
+    0%   { opacity:1; }
+    70%  { opacity:1; }
+    100% { opacity:0; pointer-events:none; }
+  }
+  #music-btn.playing {
+    animation: pulse-ring 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%,100% { box-shadow: 0 4px 18px rgba(44,95,111,0.45); }
+    50%      { box-shadow: 0 4px 28px rgba(44,95,111,0.7), 0 0 0 8px rgba(44,95,111,0.12); }
+  }
+</style>
+
+<script>
+  var musicPlaying = false;
+  var ytSrc = 'https://www.youtube.com/embed/aHjpOzsQ9YI?autoplay=1&mute=0&controls=1&loop=1&playlist=aHjpOzsQ9YI&rel=0&modestbranding=1';
+
+  // Hide label after animation
+  setTimeout(function() {
+    var lbl = document.getElementById('music-label');
+    if (lbl) lbl.style.display = 'none';
+  }, 3200);
+
+  function toggleMusic() {
+    musicPlaying = !musicPlaying;
+    var container = document.getElementById('yt-container');
+    var frame     = document.getElementById('yt-frame');
+    var btn       = document.getElementById('music-btn');
+    var iconOn    = document.getElementById('music-icon-on');
+    var iconOff   = document.getElementById('music-icon-off');
+    var lbl       = document.getElementById('music-label');
+
+    if (musicPlaying) {
+      frame.src = ytSrc;
+      container.style.display = 'block';
+      btn.classList.add('playing');
+      iconOn.style.display  = 'none';
+      iconOff.style.display = 'block';
+      lbl.style.display = 'block';
+      lbl.style.animation = 'none';
+      lbl.textContent = '♪ Spielt gerade...';
+    } else {
+      frame.src = '';
+      container.style.display = 'none';
+      btn.classList.remove('playing');
+      iconOn.style.display  = 'block';
+      iconOff.style.display = 'none';
+      lbl.style.display = 'none';
+    }
+  }
+</script>
+
+</body>
+</html>
