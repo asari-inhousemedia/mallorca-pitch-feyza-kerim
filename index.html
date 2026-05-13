@@ -197,13 +197,14 @@
     </span>
     <div class="hidden sm:flex items-center gap-7">
       <a href="#unterkunft" class="nav-link">Unterkunft</a>
+      <a href="#auto"       class="nav-link">Mietwagen</a>
       <a href="#karte"      class="nav-link">Karte</a>
       <a href="#plan"       class="nav-link">Reiseplan</a>
       <a href="#kulinarik"  class="nav-link">Essen</a>
     </div>
-    <!-- mobile hamburger (visual only, links scroll) -->
     <div class="sm:hidden flex gap-4 text-xs font-medium text-petrol">
       <a href="#unterkunft" style="color:#2C5F6F">Hotel</a>
+      <a href="#auto"       style="color:#2C5F6F">Auto</a>
       <a href="#plan"       style="color:#2C5F6F">Plan</a>
       <a href="#kulinarik"  style="color:#2C5F6F">Essen</a>
     </div>
@@ -322,42 +323,43 @@
                style="width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;"
                onmouseover="this.style.transform='scale(1.05)'"
                onmouseout="this.style.transform='scale(1)'" />
-          <div style="position:absolute;top:14px;left:14px;">
+          <div style="position:absolute;top:14px;left:14px;display:flex;gap:6px;flex-wrap:wrap;">
             <span class="badge-recommend">Unsere Empfehlung</span>
+            <span style="background:rgba(26,43,51,0.75);color:#fff;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px;">Adults Only</span>
           </div>
         </div>
         <div style="padding:1.6rem;">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.4rem;">
             <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;line-height:1.2;">Hotel Cala d'Or</h3>
-            <span style="font-size:1.05rem;font-weight:700;color:#2C5F6F;white-space:nowrap;margin-left:1rem;">ca. 90–130€</span>
+            <span style="font-size:1.05rem;font-weight:700;color:#2C5F6F;white-space:nowrap;margin-left:1rem;">ca. 80–120€</span>
           </div>
           <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Av. de Bèlgica, 49 · 07660 Cala d'Or</p>
           <div style="display:flex;align-items:center;gap:4px;margin-bottom:1rem;">
-            <span class="stars">★★★★½</span>
-            <span style="font-size:0.78rem;color:#6B7B82;margin-left:4px;">4,5 · 823 Bewertungen</span>
+            <span class="stars">★★★★</span>
+            <span style="font-size:0.78rem;color:#6B7B82;margin-left:4px;">8,8 · 624 Bewertungen (Booking)</span>
           </div>
           <ul style="list-style:none;padding:0;margin:0 0 1.4rem;display:flex;flex-direction:column;gap:6px;">
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Direkt an der Cala Petita
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Direkt an der Cala Petita (200 m Strand)
             </li>
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Eigener Strandzugang
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Pool, Fitnesscenter, Meerblick-Zimmer
             </li>
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Pool &amp; Frühstück inklusive
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Ruhig, nur Erwachsene — ideal für Euch
             </li>
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#2C5F6F;font-size:1rem;">✦</span> Ruhig, 5 Min zum Hafen Portopetro
+              <span style="color:#2C5F6F;font-size:1rem;">✦</span> 5 Min zum Marina Cala d'Or
             </li>
           </ul>
           <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <a href="https://www.google.com/maps/place/?q=place_id:ChIJyd5UPcVQlhIRFeX8ziQndL8" target="_blank" class="btn-primary">
+            <a href="https://www.google.com/maps/search/Hotel+Cala+d'Or+Adults+Only+Av+Belgica+49+Mallorca" target="_blank" class="btn-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Google Maps
             </a>
-            <a href="https://www.booking.com/searchresults.html?ss=Hotel+Cala+d%27Or+Mallorca" target="_blank" class="btn-outline">
+            <a href="https://www.booking.com/hotel/es/cala-dor.html" target="_blank" class="btn-outline">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-              Auf Booking suchen
+              Auf Booking.com ansehen
             </a>
           </div>
         </div>
@@ -379,37 +381,192 @@
         <div style="padding:1.6rem;">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0.4rem;">
             <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;line-height:1.2;">Finca Hotel Rural Es Turó</h3>
-            <span style="font-size:1.05rem;font-weight:700;color:#2C5F6F;white-space:nowrap;margin-left:1rem;">ca. 100–120€</span>
+            <span style="font-size:1.05rem;font-weight:700;color:#2C5F6F;white-space:nowrap;margin-left:1rem;">ca. 115–150€</span>
           </div>
-          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Carrer Cas Perets · 07640 Ses Salines</p>
-          <div style="display:flex;align-items:center;gap:4px;margin-bottom:1rem;">
-            <span class="stars">★★★★½</span>
-            <span style="font-size:0.78rem;color:#6B7B82;margin-left:4px;">4,4 · 619 Bewertungen</span>
+          <p style="color:#6B7B82;font-size:0.8rem;margin-bottom:0.5rem;">Ses Salines · 07640 Mallorca</p>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:0.5rem;">
+            <span class="stars">★★★★</span>
+            <span style="font-size:0.78rem;color:#6B7B82;margin-left:4px;">Boutique Finca · mehrfach ausgezeichnet</span>
           </div>
+          <p style="font-size:0.75rem;color:#C8956D;font-weight:500;margin-bottom:0.8rem;">Hinweis: knapp über 120€ Budget — Mai-Frühbuchung lohnt sich</p>
           <ul style="list-style:none;padding:0;margin:0 0 1.4rem;display:flex;flex-direction:column;gap:6px;">
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#C8956D;font-size:1rem;">✦</span> Authentische Finca, kein Hotelkomplex
+              <span style="color:#C8956D;font-size:1rem;">✦</span> Authentische Finca, Design Boutique Hotel
             </li>
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#C8956D;font-size:1rem;">✦</span> Riesige Zimmer, ruhiger Innenhof
+              <span style="color:#C8956D;font-size:1rem;">✦</span> Innen- und Außenpool, Spa
             </li>
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#C8956D;font-size:1rem;">✦</span> Olivenhain-Atmosphäre, Pool
+              <span style="color:#C8956D;font-size:1rem;">✦</span> Blick auf Cabrera-Insel und Meer
             </li>
             <li style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#1A2B33;">
-              <span style="color:#C8956D;font-size:1rem;">✦</span> 20 Min zu allen Buchten
+              <span style="color:#C8956D;font-size:1rem;">✦</span> 10 Min zu Es Trenc und Cala Llombards
             </li>
           </ul>
           <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <a href="https://www.google.com/maps/place/?q=place_id:ChIJd-ktlQqrlxIRnk2RqAKHTEI" target="_blank" class="btn-primary">
+            <a href="https://www.google.com/maps/search/Finca+Hotel+Rural+Es+Turo+Ses+Salines+Mallorca" target="_blank" class="btn-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Google Maps
             </a>
-            <a href="https://www.booking.com/searchresults.html?ss=Finca+Hotel+Rural+Es+Turo+Ses+Salines+Mallorca" target="_blank" class="btn-outline">
+            <a href="https://www.booking.com/hotel/es/finca-rural-es-turo.html" target="_blank" class="btn-outline">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-              Auf Booking suchen
+              Auf Booking.com ansehen
             </a>
           </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     MIETWAGEN
+============================================================ -->
+<section id="auto" class="py-20 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div data-aos="fade-up" style="text-align:center;margin-bottom:1rem;">
+      <p class="section-label mb-3">Direkt ab Flughafen PMI</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);">
+        Euer Mietwagen — 5 geprüfte Anbieter
+      </h2>
+      <p style="color:#6B7B82;margin-top:0.8rem;font-size:0.95rem;max-width:560px;margin-left:auto;margin-right:auto;">
+        Ihr landet am Flughafen Palma (PMI) und braucht ein Auto. Diese Anbieter haben direkte Schalter am Terminal oder einen kurzen Shuttle — ohne versteckte Fallen.
+      </p>
+    </div>
+
+    <!-- Warnung Goldcar -->
+    <div data-aos="fade-up" data-aos-delay="40"
+         style="background:rgba(200,149,109,0.1);border:1px solid rgba(200,149,109,0.35);border-radius:12px;padding:1rem 1.4rem;margin-bottom:2.5rem;display:flex;align-items:flex-start;gap:10px;">
+      <span style="font-size:1.1rem;flex-shrink:0;margin-top:1px;">⚠</span>
+      <p style="font-size:0.83rem;color:#1A2B33;line-height:1.65;margin:0;">
+        <strong>Achtung:</strong> Goldcar und Record Go haben auf Trustpilot und in deutschen Reiseforen sehr viele Beschwerden wegen Phantom-Schäden, langen Schlangen und versteckten Versicherungsgebühren. Bitte meidet diese.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- Anbieter 1: Hertz -->
+      <div data-aos="fade-up" data-aos-delay="0"
+           style="background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;">Hertz</h4>
+          <span style="background:rgba(44,95,111,0.1);color:#2C5F6F;font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;">Direkt am Terminal</span>
+        </div>
+        <p style="font-size:0.83rem;color:#6B7B82;line-height:1.65;margin-bottom:0.9rem;">
+          Schalter direkt im Ankunftsbereich PMI. Kein Shuttle, sofortige Abholung. Transparente Preise, globaler Support.
+        </p>
+        <div style="font-size:0.8rem;color:#1A2B33;margin-bottom:1rem;">
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> Kleinstwagen ab ca. 25–35€/Tag im Mai<br>
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> Vollkaskoversicherung direkt buchbar<br>
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> 24/7 Support
+        </div>
+        <a href="https://www.hertz.de/rentacar/car-hire/spain/palma-de-mallorca/palma-de-mallorca-airport" target="_blank" class="btn-primary" style="font-size:0.78rem;padding:8px 14px;">
+          Hertz buchen
+        </a>
+      </div>
+
+      <!-- Anbieter 2: Avis -->
+      <div data-aos="fade-up" data-aos-delay="60"
+           style="background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;">Avis</h4>
+          <span style="background:rgba(44,95,111,0.1);color:#2C5F6F;font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;">Direkt am Terminal</span>
+        </div>
+        <p style="font-size:0.83rem;color:#6B7B82;line-height:1.65;margin-bottom:0.9rem;">
+          Zuverlässig, gut bewertet, keine aggressiven Upsell-Taktiken. Beliebt bei deutschen Urlaubern auf Mallorca.
+        </p>
+        <div style="font-size:0.8rem;color:#1A2B33;margin-bottom:1rem;">
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> Flexible Stornierung buchbar<br>
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> Super Cover (Vollkasko ohne SB) empfohlen<br>
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> App-basierter Check-in möglich
+        </div>
+        <a href="https://www.avis.de/car-hire/html/misc/search.html?from_city_arpt=PMI" target="_blank" class="btn-primary" style="font-size:0.78rem;padding:8px 14px;">
+          Avis buchen
+        </a>
+      </div>
+
+      <!-- Anbieter 3: Europcar -->
+      <div data-aos="fade-up" data-aos-delay="120"
+           style="background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;">Europcar</h4>
+          <span style="background:rgba(44,95,111,0.1);color:#2C5F6F;font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;">Direkt am Terminal</span>
+        </div>
+        <p style="font-size:0.83rem;color:#6B7B82;line-height:1.65;margin-bottom:0.9rem;">
+          Einer der größten Anbieter am PMI. Breite Fahrzeugauswahl, auch größere Kombi-Klassen für Bergtouren mit Gepäck.
+        </p>
+        <div style="font-size:0.8rem;color:#1A2B33;margin-bottom:1rem;">
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> Economy-Klasse für 5 Tage oft günstig<br>
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> One-Way-Rückgabe buchbar<br>
+          <span style="color:#2C5F6F;margin-right:4px;">✦</span> App + digitale Fahrzeugübergabe
+        </div>
+        <a href="https://www.europcar.de/de-de/mieten/standorte/spanien/mallorca/flughafen-palma-de-mallorca" target="_blank" class="btn-primary" style="font-size:0.78rem;padding:8px 14px;">
+          Europcar buchen
+        </a>
+      </div>
+
+      <!-- Anbieter 4: OK Mobility -->
+      <div data-aos="fade-up" data-aos-delay="180"
+           style="background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;">OK Mobility</h4>
+          <span style="background:rgba(200,149,109,0.15);color:#C8956D;font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;">Lokalanbieter</span>
+        </div>
+        <p style="font-size:0.83rem;color:#6B7B82;line-height:1.65;margin-bottom:0.9rem;">
+          Mallorquinischer Anbieter, modernes Fahrzeugportfolio, 3,7/5 auf Trustpilot (31.000 Bewertungen). Gut für Budget-Buchungen.
+        </p>
+        <div style="font-size:0.8rem;color:#1A2B33;margin-bottom:1rem;">
+          <span style="color:#C8956D;margin-right:4px;">✦</span> Oft günstigste Tarife auf Vergleichsportalen<br>
+          <span style="color:#C8956D;margin-right:4px;">✦</span> Shuttle: ~5 Min vom Terminal<br>
+          <span style="color:#C8956D;margin-right:4px;">✦</span> Vollkaskoversicherung dringend empfohlen
+        </div>
+        <a href="https://www.okmobility.com/de/mietwagen/spanien/mallorca/flughafen-palma-de-mallorca" target="_blank" class="btn-outline" style="font-size:0.78rem;padding:7px 13px;">
+          OK Mobility buchen
+        </a>
+      </div>
+
+      <!-- Anbieter 5: Centauro -->
+      <div data-aos="fade-up" data-aos-delay="240"
+           style="background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 18px rgba(44,95,111,0.09);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+          <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;">Centauro</h4>
+          <span style="background:rgba(200,149,109,0.15);color:#C8956D;font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;">Lokalanbieter</span>
+        </div>
+        <p style="font-size:0.83rem;color:#6B7B82;line-height:1.65;margin-bottom:0.9rem;">
+          In der Community gut beleumundet — fairer Umgang mit Kaution bei gekaufter Vollkasko, kein aggressiver Upsell am Schalter.
+        </p>
+        <div style="font-size:0.8rem;color:#1A2B33;margin-bottom:1rem;">
+          <span style="color:#C8956D;margin-right:4px;">✦</span> Shuttle vom Terminal: ~5 Min<br>
+          <span style="color:#C8956D;margin-right:4px;">✦</span> Sehr breite Karosserie-Auswahl<br>
+          <span style="color:#C8956D;margin-right:4px;">✦</span> Online-Check-in verkürzt Wartezeit
+        </div>
+        <a href="https://www.centauro.net/es/flota/alquiler-coches-aeropuerto-palma-de-mallorca" target="_blank" class="btn-outline" style="font-size:0.78rem;padding:7px 13px;">
+          Centauro buchen
+        </a>
+      </div>
+
+      <!-- Vergleich-Box -->
+      <div data-aos="fade-up" data-aos-delay="300"
+           style="background:linear-gradient(135deg,#2C5F6F,#3a8fa3);border-radius:16px;padding:1.5rem;color:#fff;">
+        <h4 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:0.7rem;color:#fff;">Preise vergleichen</h4>
+        <p style="font-size:0.83rem;opacity:0.85;line-height:1.65;margin-bottom:1rem;">
+          Für den besten Preis alle Anbieter auf einen Blick — CHECK24 und ADAC Autovermietung haben keine eigenen Autos und zeigen nur echte Preise.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="https://mietwagen.check24.de/mietwagen-am-flughafen/flughafen-palma-de-mallorca" target="_blank"
+             style="background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:8px 14px;border-radius:8px;font-size:0.78rem;font-weight:500;text-decoration:none;text-align:center;transition:background 0.2s;"
+             onmouseover="this.style.background='rgba(255,255,255,0.28)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.18)'">
+            CHECK24 Vergleich
+          </a>
+          <a href="https://autovermietung.adac.de/mietwagen/spanien/mallorca/flughafen-palma-de-mallorca/" target="_blank"
+             style="background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:8px 14px;border-radius:8px;font-size:0.78rem;font-weight:500;text-decoration:none;text-align:center;transition:background 0.2s;"
+             onmouseover="this.style.background='rgba(255,255,255,0.28)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.18)'">
+            ADAC Autovermietung
+          </a>
         </div>
       </div>
 
@@ -432,7 +589,7 @@
     </div>
     <div data-aos="fade-up" data-aos-delay="80"
          style="border-radius:18px;overflow:hidden;box-shadow:0 6px 36px rgba(44,95,111,0.14);">
-      <div id="map" style="height:520px;width:100%;"></div>
+      <div id="map" style="height:580px;width:100%;"></div>
     </div>
   </div>
 </section>
@@ -685,10 +842,11 @@
         </button>
         <div class="accordion-content">
           <p style="color:#6B7B82;font-size:0.9rem;line-height:1.75;padding-bottom:1.2rem;">
-            <strong style="color:#1A2B33;">Hotel:</strong> 90–130€ pro Nacht (4 Nächte = 360–520€)<br>
+            <strong style="color:#1A2B33;">Hotel:</strong> 80–130€ pro Nacht (4 Nächte = 320–520€)<br>
+            <strong style="color:#1A2B33;">Mietwagen:</strong> 25–40€/Tag inkl. Vollkasko (5 Tage = 125–200€) — früh buchen!<br>
             <strong style="color:#1A2B33;">Essen:</strong> 30–50€ pro Person/Tag (Mittag einfach, Abend schöner)<br>
-            <strong style="color:#1A2B33;">Aktivitäten:</strong> Buchten sind kostenlos; Mondragó 6€ Parkgebühr<br>
-            <strong style="color:#1A2B33;">Gesamt (grob):</strong> ca. 800–1.000€ für Euch beide vor Ort (ohne Flüge)
+            <strong style="color:#1A2B33;">Aktivitäten:</strong> Buchten kostenlos; Mondragó 6€ Parkgebühr; Benzin ~30€ gesamt<br>
+            <strong style="color:#1A2B33;">Gesamt (grob):</strong> ca. 900–1.200€ für Euch beide vor Ort (ohne Flüge)
           </p>
         </div>
       </div>
@@ -741,70 +899,132 @@
   // Leaflet Map
   (function() {
     var map = L.map('map', { zoomControl: true, scrollWheelZoom: false })
-      .setView([39.38, 3.10], 10);
+      .setView([39.50, 2.95], 9);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd', maxZoom: 19
     }).addTo(map);
 
-    function makeIcon(color, emoji) {
+    function makeIcon(color, emoji, size) {
+      size = size || 32;
       return L.divIcon({
-        html: '<div style="background:' + color + ';width:32px;height:32px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.22);display:flex;align-items:center;justify-content:center;font-size:14px;">' + emoji + '</div>',
+        html: '<div style="background:' + color + ';width:' + size + 'px;height:' + size + 'px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-size:' + Math.round(size*0.44) + 'px;">' + emoji + '</div>',
         className: '',
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-        popupAnchor: [0, -18]
+        iconSize: [size, size],
+        iconAnchor: [size/2, size/2],
+        popupAnchor: [0, -(size/2 + 4)]
       });
     }
 
-    var hotelIcon = makeIcon('#2C5F6F', '🏨');
-    var beachIcon = makeIcon('#4CA8BE', '🏖');
-    var foodIcon  = makeIcon('#C8956D', '🍴');
-    var townIcon  = makeIcon('#8E9EA5', '🏘');
+    var airportIcon = makeIcon('#1A2B33', '✈', 36);
+    var hotelIcon   = makeIcon('#2C5F6F', '🏨');
+    var beachIcon   = makeIcon('#4CA8BE', '🏖');
+    var foodIcon    = makeIcon('#C8956D', '🍴');
+    var townIcon    = makeIcon('#8E9EA5', '🏘');
 
-    var popupOpts = { maxWidth: 220, className: '' };
+    var popupOpts = { maxWidth: 240, className: '' };
 
-    // Hotels
-    L.marker([39.3714, 3.2293], {icon: hotelIcon}).addTo(map)
-      .bindPopup('<strong>Hotel Cala d\'Or</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Eure empfohlene Basis</span>', popupOpts);
-    L.marker([39.3537, 3.0780], {icon: hotelIcon}).addTo(map)
-      .bindPopup('<strong>Finca Es Turó</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Alternative, Ses Salines</span>', popupOpts);
+    function popStyle(title, sub) {
+      return '<div style="font-family:Inter,sans-serif;padding:2px 0;">' +
+        '<strong style="font-size:0.88rem;color:#1A2B33;">' + title + '</strong>' +
+        (sub ? '<br><span style="color:#6B7B82;font-size:0.78rem;">' + sub + '</span>' : '') +
+        '</div>';
+    }
 
-    // Buchten
+    // --- Flughafen PMI ---
+    var pmi = [39.5517, 2.7388];
+    L.marker(pmi, {icon: airportIcon}).addTo(map)
+      .bindPopup(popStyle('Flughafen Palma (PMI)', 'Euer Startpunkt — hier wartet Euer Mietwagen'), popupOpts);
+
+    // --- Hotels ---
+    var hotelCalaOr  = [39.3714, 3.2293];
+    var hotelEsturo  = [39.3537, 3.0780];
+
+    L.marker(hotelCalaOr, {icon: hotelIcon}).addTo(map)
+      .bindPopup(popStyle("Hotel Cala d'Or", 'Eure empfohlene Basis · ca. 70 km vom Flughafen (55 Min)'), popupOpts);
+    L.marker(hotelEsturo, {icon: hotelIcon}).addTo(map)
+      .bindPopup(popStyle('Finca Es Turó', 'Alternative · Ses Salines · ca. 63 km (50 Min)'), popupOpts);
+
+    // --- Routen: PMI → Hotels (gestrichelte Linie) ---
+    var routeStyle = { color: '#2C5F6F', weight: 2.5, opacity: 0.55, dashArray: '7,6' };
+    var routeAlt   = { color: '#C8956D', weight: 2.5, opacity: 0.55, dashArray: '7,6' };
+
+    // Vereinfachte Route PMI → Cala d'Or (via Autobahn-Waypoints)
+    L.polyline([
+      pmi,
+      [39.5200, 2.8400], // Richtung Autovía Ma-19
+      [39.4600, 2.9500],
+      [39.4000, 3.0700],
+      [39.3800, 3.1600],
+      hotelCalaOr
+    ], routeStyle).addTo(map)
+      .bindPopup(popStyle('Route: PMI → Hotel Cala d\'Or', '~70 km · ca. 55 Min via Ma-19'));
+
+    // Route PMI → Es Turó
+    L.polyline([
+      pmi,
+      [39.5200, 2.8400],
+      [39.4600, 2.9500],
+      [39.4000, 3.0000],
+      [39.3700, 3.0400],
+      hotelEsturo
+    ], routeAlt).addTo(map)
+      .bindPopup(popStyle('Route: PMI → Finca Es Turó', '~63 km · ca. 50 Min via Ma-19'));
+
+    // Distanz-Label Mitte der Route (blau)
+    L.marker([39.4300, 3.0500], {
+      icon: L.divIcon({
+        html: '<div style="background:#2C5F6F;color:#fff;font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,0.18);">70 km · 55 Min</div>',
+        className: '', iconAnchor: [40, 10]
+      })
+    }).addTo(map);
+
+    // Distanz-Label Mitte Route (sand)
+    L.marker([39.4200, 2.9300], {
+      icon: L.divIcon({
+        html: '<div style="background:#C8956D;color:#fff;font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap;box-shadow:0 1px 6px rgba(0,0,0,0.18);">63 km · 50 Min</div>',
+        className: '', iconAnchor: [40, 10]
+      })
+    }).addTo(map);
+
+    // --- Buchten ---
     L.marker([39.3247, 3.1395], {icon: beachIcon}).addTo(map)
-      .bindPopup('<strong>Caló des Moro</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Schönste Minibucht — vor 9:30 Uhr!</span>', popupOpts);
+      .bindPopup(popStyle('Caló des Moro', 'Schönste Minibucht — vor 9:30 Uhr!'), popupOpts);
     L.marker([39.3478, 3.1840], {icon: beachIcon}).addTo(map)
-      .bindPopup('<strong>Cala Mondragó</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Naturpark, Pinienwälder</span>', popupOpts);
+      .bindPopup(popStyle('Cala Mondragó', 'Naturpark, Pinienwälder'), popupOpts);
     L.marker([39.3211, 3.1281], {icon: beachIcon}).addTo(map)
-      .bindPopup('<strong>Cala Llombards</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Ruhig, wenig bekannt</span>', popupOpts);
+      .bindPopup(popStyle('Cala Llombards', 'Ruhig, wenig bekannt'), popupOpts);
     L.marker([39.3478, 2.9978], {icon: beachIcon}).addTo(map)
-      .bindPopup('<strong>Es Trenc</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Karibischer 3-km-Strand</span>', popupOpts);
+      .bindPopup(popStyle('Es Trenc', 'Karibischer 3-km-Strand'), popupOpts);
     L.marker([39.7494, 2.6420], {icon: beachIcon}).addTo(map)
-      .bindPopup('<strong>Cala Deià</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Tramuntana-Küste, Tramuntana</span>', popupOpts);
+      .bindPopup(popStyle('Cala Deià', 'Tramuntana-Küste · Tag 4'), popupOpts);
 
-    // Restaurants
+    // --- Restaurants ---
     L.marker([39.7456, 2.6356], {icon: foodIcon}).addTo(map)
-      .bindPopup('<strong>Ca\'s Patró March</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Legendäres Bootshaus-Restaurant Deià</span>', popupOpts);
+      .bindPopup(popStyle("Ca's Patró March", 'Bootshaus-Restaurant Deià · reservieren!'), popupOpts);
     L.marker([39.3275, 3.1664], {icon: foodIcon}).addTo(map)
-      .bindPopup('<strong>Sa Llotja des Cap</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Fisch am Steg, Cala Figuera</span>', popupOpts);
+      .bindPopup(popStyle('Sa Llotja des Cap', 'Fisch am Steg · Cala Figuera'), popupOpts);
 
-    // Orte
+    // --- Orte ---
     L.marker([39.3551, 3.1287], {icon: townIcon}).addTo(map)
-      .bindPopup('<strong>Santanyí</strong><br><span style="color:#6B7B82;font-size:0.8rem;">Wochenmarkt samstags</span>', popupOpts);
+      .bindPopup(popStyle('Santanyí', 'Wochenmarkt samstags'), popupOpts);
     L.marker([39.7106, 2.6225], {icon: townIcon}).addTo(map)
-      .bindPopup('<strong>Valldemossa</strong><br><span style="color:#6B7B82;font-size:0.8rem;">UNESCO-Welterbe-Dorf</span>', popupOpts);
+      .bindPopup(popStyle('Valldemossa', 'UNESCO-Welterbe · Tag 4'), popupOpts);
 
-    // Legende
+    // --- Legende ---
     var legend = L.control({ position: 'topright' });
     legend.onAdd = function() {
       var div = L.DomUtil.create('div', 'map-legend');
       div.innerHTML =
         '<strong style="font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:#1A2B33;">Legende</strong><br>' +
+        '<span>✈</span> Flughafen PMI<br>' +
         '<span style="color:#2C5F6F">🏨</span> Hotel<br>' +
         '<span style="color:#4CA8BE">🏖</span> Bucht<br>' +
         '<span style="color:#C8956D">🍴</span> Restaurant<br>' +
-        '<span style="color:#8E9EA5">🏘</span> Ort';
+        '<span style="color:#8E9EA5">🏘</span> Ort<br>' +
+        '<span style="color:#2C5F6F">——</span> Route A<br>' +
+        '<span style="color:#C8956D">——</span> Route B';
       return div;
     };
     legend.addTo(map);
