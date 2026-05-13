@@ -94,6 +94,7 @@
 
   /* Map */
   #map { z-index: 1; }
+  .leaflet-popup-content { color: #1A2B33 !important; }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar { width: 6px; }
@@ -137,13 +138,14 @@
 
   /* Leaflet legend */
   .map-legend {
-    background: rgba(250,247,242,0.95);
+    background: rgba(250,247,242,0.97);
     border-radius: 10px;
     padding: 10px 14px;
     font-size: 0.75rem;
-    line-height: 1.7;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    line-height: 1.8;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.14);
     font-family: 'Inter', sans-serif;
+    color: #1A2B33;
   }
 
   /* Restaurant card */
@@ -926,9 +928,9 @@
     var popupOpts = { maxWidth: 240, className: '' };
 
     function popStyle(title, sub) {
-      return '<div style="font-family:Inter,sans-serif;padding:2px 0;">' +
-        '<strong style="font-size:0.88rem;color:#1A2B33;">' + title + '</strong>' +
-        (sub ? '<br><span style="color:#6B7B82;font-size:0.78rem;">' + sub + '</span>' : '') +
+      return '<div style="font-family:Inter,sans-serif;padding:2px 0;color:#1A2B33;">' +
+        '<strong style="font-size:0.88rem;color:#1A2B33;display:block;">' + title + '</strong>' +
+        (sub ? '<span style="color:#3a5260;font-size:0.78rem;display:block;margin-top:2px;">' + sub + '</span>' : '') +
         '</div>';
     }
 
@@ -1016,15 +1018,18 @@
     var legend = L.control({ position: 'topright' });
     legend.onAdd = function() {
       var div = L.DomUtil.create('div', 'map-legend');
+      var row = function(dot, label) {
+        return '<div style="display:flex;align-items:center;gap:6px;color:#1A2B33;">' + dot + '<span style="color:#1A2B33;">' + label + '</span></div>';
+      };
       div.innerHTML =
-        '<strong style="font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:#1A2B33;">Legende</strong><br>' +
-        '<span>✈</span> Flughafen PMI<br>' +
-        '<span style="color:#2C5F6F">🏨</span> Hotel<br>' +
-        '<span style="color:#4CA8BE">🏖</span> Bucht<br>' +
-        '<span style="color:#C8956D">🍴</span> Restaurant<br>' +
-        '<span style="color:#8E9EA5">🏘</span> Ort<br>' +
-        '<span style="color:#2C5F6F">——</span> Route A<br>' +
-        '<span style="color:#C8956D">——</span> Route B';
+        '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#1A2B33;margin-bottom:6px;">Legende</div>' +
+        row('<span style="font-size:1rem;">✈</span>', 'Flughafen PMI') +
+        row('<span style="width:12px;height:12px;border-radius:50%;background:#2C5F6F;display:inline-block;flex-shrink:0;"></span>', 'Hotel') +
+        row('<span style="width:12px;height:12px;border-radius:50%;background:#4CA8BE;display:inline-block;flex-shrink:0;"></span>', 'Bucht') +
+        row('<span style="width:12px;height:12px;border-radius:50%;background:#C8956D;display:inline-block;flex-shrink:0;"></span>', 'Restaurant') +
+        row('<span style="width:12px;height:12px;border-radius:50%;background:#8E9EA5;display:inline-block;flex-shrink:0;"></span>', 'Ort') +
+        row('<span style="width:22px;height:3px;background:#2C5F6F;display:inline-block;flex-shrink:0;border-radius:2px;"></span>', 'Route Cala d\'Or') +
+        row('<span style="width:22px;height:3px;background:#C8956D;display:inline-block;flex-shrink:0;border-radius:2px;"></span>', 'Route Es Turó');
       return div;
     };
     legend.addTo(map);
